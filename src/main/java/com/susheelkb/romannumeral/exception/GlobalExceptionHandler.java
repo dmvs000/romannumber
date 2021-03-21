@@ -36,6 +36,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 		return new ResponseEntity<>(errorDetails, HttpStatus.UNPROCESSABLE_ENTITY);
 		
 	}
+
+	@ExceptionHandler(RuntimeException.class)
+	public ResponseEntity<?>defaultExcep(RuntimeException exception) {
+		return new ResponseEntity<>(exception, HttpStatus.INTERNAL_SERVER_ERROR);
+	}
 	
 	
 }

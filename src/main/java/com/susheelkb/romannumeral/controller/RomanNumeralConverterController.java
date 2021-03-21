@@ -3,6 +3,7 @@
  */
 package com.susheelkb.romannumeral.controller;
 
+import io.micrometer.core.instrument.Metrics;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -34,6 +35,7 @@ public class RomanNumeralConverterController {
 
 	@GetMapping(value = "/romannumeral", params = { "query" })
 	public ResponseEntity<RomanNumber> toRomanNum(@RequestParam("query") int number) {
+		Metrics.counter("romannumeral", "api", "singlequery").increment();
 		RomanNumber romanNumber = romanNumeralConverterService.toRomanNumber(number);
 		logger.info("API-CALLED " + number);
 		return ResponseEntity.ok(romanNumber);
@@ -42,8 +44,10 @@ public class RomanNumeralConverterController {
 	@GetMapping(value = "/romannumeral", params = { "min", "max" })
 	public ResponseEntity<List<RomanNumber>> convertRangeToRomanNumeral(@RequestParam("min") int minNumber,
 			@RequestParam("max") int maxNumber) {
+		Metrics.counter("romannumeral", "api", "rangequery").increment();
 		List<RomanNumber> romanNumberList = romanNumeralConverterService.convertRangeToRoman(minNumber, maxNumber);
 		logger.info("API-CALLED with range");
 		return ResponseEntity.ok(romanNumberList);
 	}
+
 }
